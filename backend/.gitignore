@@ -1,0 +1,19 @@
+# Build artifacts
+bin/
+obj/
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# User secrets
+secrets.json
+
+# Rider / VS
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
