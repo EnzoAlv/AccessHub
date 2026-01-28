@@ -1,0 +1,89 @@
+/**
+ * LoginPage.css - Estilos da página de login
+ * 
+ * Define o layout e visual da página de autenticação
+ */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-panel {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.login-title {
+  text-align: center;
+  color: #333;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #666;
+  margin: 0 0 24px 0;
+  font-size: 14px;
+}
+
+.login-error {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.login-button {
+  margin-top: 8px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.login-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 600px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+
+  .login-subtitle {
+    font-size: 12px;
+  }
+}
