@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -24,7 +24,7 @@ const validationModel = Schema.Model({
 });
 
 export default function LoginPage() {
-  const formRef = useState(null)[0];
+  const formRef = useRef();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -45,7 +45,6 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!formRef.current?.check()) {
-      console.log("Formulário inválido");
       return;
     }
 
@@ -73,36 +72,26 @@ export default function LoginPage() {
             ref={formRef}
             model={validationModel}
             onSubmit={handleSubmit}
-            onChange={(data) => setFormData(data)}
             formValue={formData}
+            onChange={(data) => setFormData(data)}
           >
             <FormGroup>
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
+              <label className="form-label">Email</label>
               <FormControl
                 name="email"
                 type="email"
                 placeholder="seu@email.com"
-                value={formData.email}
-                onChange={(value) => handleChange("email", value)}
                 disabled={isLoading}
-                accepter={<input />}
               />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="senha" className="form-label">
-                Senha
-              </label>
+              <label className="form-label">Senha</label>
               <FormControl
                 name="senha"
                 type="password"
                 placeholder="Digite sua senha"
-                value={formData.senha}
-                onChange={(value) => handleChange("senha", value)}
                 disabled={isLoading}
-                accepter={<input />}
               />
             </FormGroup>
 
