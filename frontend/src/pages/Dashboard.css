@@ -1,0 +1,76 @@
+/**
+ * Dashboard.css - Estilos da página dashboard
+ */
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  background-color: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-name {
+  color: #666;
+  font-size: 14px;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.dashboard-content h2 {
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.dashboard-content p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.coming-soon {
+  background-color: #f0f2f5;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 24px;
+  text-align: center;
+}
+
+.dashboard-footer {
+  background-color: #f5f5f5;
+  border-top: 1px solid #e8e8e8;
+  padding: 16px 24px;
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+}
+
+.dashboard-footer p {
+  margin: 0;
+}
