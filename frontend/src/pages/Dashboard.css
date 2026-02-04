@@ -1,76 +1,103 @@
-/**
- * Dashboard.css - Estilos da página dashboard
- */
-
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.dashboard-header {
-  background-color: #fff;
-  border-bottom: 1px solid #e8e8e8;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.header-left h1 {
+* {
   margin: 0;
-  font-size: 24px;
-  color: #333;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.user-name {
-  color: #666;
-  font-size: 14px;
-}
-
-.dashboard-content {
-  flex: 1;
+.dashboard-page {
   padding: 32px 24px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
 
-.dashboard-content h2 {
-  color: #333;
+.dashboard-page h2 {
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.dashboard-page > p {
+  color: #666;
+  margin-bottom: 32px;
+  font-size: 15px;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.welcome-card h3 {
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 16px;
 }
 
-.dashboard-content p {
-  color: #666;
-  line-height: 1.6;
+.user-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item label {
+  color: #999;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item span {
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .coming-soon {
-  background-color: #f0f2f5;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  padding: 16px;
-  margin-top: 24px;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: 2px solid #667eea30;
+  border-radius: 12px;
+  padding: 32px 24px;
   text-align: center;
 }
 
-.dashboard-footer {
-  background-color: #f5f5f5;
-  border-top: 1px solid #e8e8e8;
-  padding: 16px 24px;
-  text-align: center;
-  color: #666;
-  font-size: 12px;
-}
-
-.dashboard-footer p {
+.coming-soon p {
+  color: #667eea;
+  font-weight: 500;
   margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 24px 16px;
+  }
+
+  .dashboard-page h2 {
+    font-size: 24px;
+  }
+
+  .welcome-card {
+    padding: 16px;
+  }
+
+  .user-info {
+    grid-template-columns: 1fr;
+  }
+
+  .coming-soon {
+    padding: 24px 16px;
+  }
 }

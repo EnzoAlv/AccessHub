@@ -5,6 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { MenuProvider } from "./contexts/MenuContext";
 import { useAuth } from "./hooks/useAuth";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
@@ -28,7 +29,7 @@ function AppRoutes() {
             <Navigate to="/login" />
           )
         }
-      /> 
+      />
       <Route
         path="/login"
         element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />}
@@ -36,18 +37,19 @@ function AppRoutes() {
       <Route
         path="/dashboard"
         element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-      />   
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }
 
-
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppRoutes />
+        <MenuProvider>
+          <AppRoutes />
+        </MenuProvider>
       </AuthProvider>
     </Router>
   );
