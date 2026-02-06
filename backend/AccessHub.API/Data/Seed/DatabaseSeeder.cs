@@ -6,22 +6,22 @@ public static class RoleSeeder
 {
     public static void Seed(AppDbContext context)
     {
-        if (!context.Roles.Any())
-        {
-            context.Roles.AddRange(
-                new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Admin"
-                },
-                new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "User"
-                }
-            );
+        CreateRoleIfNotExists(context, "Admin");
+        CreateRoleIfNotExists(context, "Editor");
+        CreateRoleIfNotExists(context, "User");
 
-            context.SaveChanges();
+        context.SaveChanges();
+    }
+
+    private static void CreateRoleIfNotExists(AppDbContext context, string nome)
+    {
+        if (!context.Roles.Any(r => r.Nome == nome))
+        {
+            context.Roles.Add(new Role
+            {
+                Id = Guid.NewGuid(),
+                Nome = nome
+            });
         }
     }
 }

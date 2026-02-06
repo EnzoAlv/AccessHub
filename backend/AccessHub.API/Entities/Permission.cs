@@ -14,13 +14,11 @@ public class Permission
     public Role Role { get; set; } = null!;
 
     [Column("menu_id")]
-    [ForeignKey("Menu")]
     public Guid? MenuId { get; set; }
 
     public virtual Menu? Menu { get; set; }
 
     [Column("sub_menu_id")]
-    [ForeignKey("SubMenu")]
     public Guid? SubMenuId { get; set; }
 
     public SubMenu? SubMenu { get; set; }

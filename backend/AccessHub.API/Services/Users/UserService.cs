@@ -23,7 +23,7 @@ public class UserService : IUserService
                 Id = u.Id,
                 Nome = u.Nome,
                 Email = u.Email,
-                Role = u.Role.Name
+                Role = u.Role.Nome
             })
             .ToListAsync();
     }
@@ -38,7 +38,7 @@ public class UserService : IUserService
                 Id = u.Id,
                 Nome = u.Nome,
                 Email = u.Email,
-                Role = u.Role.Name
+                Role = u.Role.Nome
             })
             .FirstOrDefaultAsync();
     }

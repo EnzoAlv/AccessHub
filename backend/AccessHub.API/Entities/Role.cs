@@ -9,7 +9,7 @@ public class Role
     [Column("id")]
     public Guid Id { get; set; }
     [Column("name")]
-    public string Name { get; set; } = null!;
+    public string Nome { get; set; } = null!;
 
     public ICollection<User> Users { get; set; } = new List<User>();
 
