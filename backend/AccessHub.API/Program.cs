@@ -2,6 +2,7 @@ using AccessHub.API.Data;
 using AccessHub.API.Data.Seed;
 using AccessHub.API.Services.Menus;
 using AccessHub.API.Services.Roles;
+using AccessHub.API.Services.SubMenus;
 using AccessHub.API.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,9 +23,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Injeção de dependência
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ISubMenuService, SubMenuService>();
 
 var app = builder.Build();
 
