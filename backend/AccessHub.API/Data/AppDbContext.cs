@@ -10,13 +10,11 @@ public class AppDbContext : DbContext
     {
     }
 
-    //Tabelas
+    // Tabelas
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Menu> Menus => Set<Menu>();
     public DbSet<SubMenu> SubMenus => Set<SubMenu>();
-
-    //Tabela de controle de acesso
     public DbSet<Permission> Permissions => Set<Permission>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,19 +25,22 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasOne(u => u.Role)
             .WithMany(r => r.Users)
-            .HasForeignKey(u => u.RoleId);
+            .HasForeignKey(u => u.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Menu -> SubMenu
         modelBuilder.Entity<SubMenu>()
             .HasOne(sm => sm.Menu)
             .WithMany(m => m.SubMenus)
-            .HasForeignKey(sm => sm.MenuId);
+            .HasForeignKey(sm => sm.MenuId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        //Permission -> Role
+        // Permission -> Role
         modelBuilder.Entity<Permission>()
             .HasOne(p => p.Role)
             .WithMany(r => r.Permissions)
-            .HasForeignKey(p => p.RoleId);
+            .HasForeignKey(p => p.RoleId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Permission -> Menu
         modelBuilder.Entity<Permission>()

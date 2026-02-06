@@ -8,50 +8,63 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers da API
+#region Controllers
 builder.Services.AddControllers();
+#endregion
 
-// Banco + EF Core
+#region Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+#endregion
 
-// Documentação Swagger
+#region Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#endregion
 
-// Injeção de dependência
+#region Dependency Injection
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ISubMenuService, SubMenuService>();
+#endregion
 
 var app = builder.Build();
 
-// Seed inicial do banco
+#region Migration + Seed (safe)
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    RoleSeeder.Seed(context);
-}
 
-// Ambiente de desenvolvimento
-if (app.Environment.IsDevelopment())
+    try
+    {
+        context.Database.Migrate();
+        RoleSeeder.Seed(context);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[DB INIT ERROR] {ex.Message}");
+    }
+}
+#endregion
+
+#region Middleware
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.RoutePrefix = "swagger";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AccessHub API v1");
+    });
 }
 
-// Redirecionamento HTTPS
 app.UseHttpsRedirection();
-
-// Middleware de autorização
 app.UseAuthorization();
-
-// Mapeamento dos controllers
 app.MapControllers();
+#endregion
 
-// Inicialização da aplicação
 app.Run();
