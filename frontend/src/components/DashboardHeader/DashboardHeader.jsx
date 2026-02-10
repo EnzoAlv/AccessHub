@@ -1,53 +1,44 @@
-import { useNavigate } from "react-router-dom";
+import { Navbar, Nav, Dropdown, Avatar } from "rsuite";
 import { useAuth } from "../../hooks/useAuth";
-import { Header, Avatar, Dropdown } from "rsuite";
-import "./DashboardHeader.css";
+import { useNavigate } from "react-router-dom";
+import ExitIcon from '@rsuite/icons/Exit';
+import UserInfoIcon from '@rsuite/icons/UserInfo';
 
 export default function DashboardHeader() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const getInitials = (nome) => {
-    return (
-      nome
-        ?.split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase() || "U"
-    );
-  };
+  const getInitials = (n) => n?.split(" ").slice(0, 2).map(c => c[0]).join("").toUpperCase() || "U";
 
   return (
-    <Header className="dashboard-header">
-      <div className="header-left">
-        <h1 className="header-title">AccessHub</h1>
-      </div>
-      <div className="header-right">
-        <span className="header-user-role">{user?.role}</span>
-        <Dropdown
-          title={
-            <Avatar circle size="sm" className="header-avatar">
-              {getInitials(user?.nome)}
-            </Avatar>
-          }
-          noCaret
-          placement="bottomEnd"
+    <Navbar appearance="default" style={{ borderBottom: '1px solid #e5e5e5' }}>
+      <Navbar.Brand>
+        <span style={{ fontWeight: 600, color: '#575757' }}>Visão Geral</span>
+      </Navbar.Brand>
+
+      <Nav pullRight>
+        <Nav.Menu
+            icon={
+                <Avatar circle size="xs" style={{ background: '#3498ff', verticalAlign: 'middle' }}>
+                    {getInitials(user?.nome)}
+                </Avatar>
+            }
+            title={user?.nome?.split(' ')[0]}
+            placement="bottomEnd"
         >
-          <Dropdown.Item disabled>
-            <div className="dropdown-user-info">
-              <strong>{user?.nome}</strong>
-              <small>{user?.email}</small>
-            </div>
-          </Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item onClick={handleLogout}>🚪 Sair</Dropdown.Item>
-        </Dropdown>
-      </div>
-    </Header>
+            <Dropdown.Item panel style={{ padding: 10, width: 200 }}>
+                <p>Logado como</p>
+                <strong>{user?.nome}</strong>
+                <br />
+                <small className="text-muted">{user?.email}</small>
+            </Dropdown.Item>
+            <Dropdown.Separator />
+            <Dropdown.Item icon={<UserInfoIcon />}>Perfil</Dropdown.Item>
+            <Dropdown.Item icon={<ExitIcon />} onClick={() => { logout(); navigate('/login'); }}>
+                Sair
+            </Dropdown.Item>
+        </Nav.Menu>
+      </Nav>
+    </Navbar>
   );
 }

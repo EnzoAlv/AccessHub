@@ -1,119 +1,66 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Form,
-  FormGroup,
-  FormControl,
-  Button,
-  Message,
-  Panel,
-  Schema,
-} from "rsuite";
+import { Form, Button, Message, Schema, Input } from "rsuite";
 import { useAuth } from "../hooks/useAuth";
 import "./LoginPage.css";
 
 const { StringType } = Schema.Types;
-const validationModel = Schema.Model({
-  email: StringType()
-    .isEmail("Por favor, insira um email válido.")
-    .isRequired("Email é obrigatório."),
-  senha: StringType()
-    .isRequired("Senha é obrigatória.")
-    .minLength(1, "Senha não pode estar vazia."),
+const model = Schema.Model({
+  email: StringType().isEmail("Email inválido").isRequired("Obrigatório"),
+  senha: StringType().isRequired("Obrigatório"),
 });
 
 export default function LoginPage() {
   const formRef = useRef();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    senha: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", senha: "" });
   const { login, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (name, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formRef.current?.check()) {
-      return;
-    }
-
+  const handleSubmit = async () => {
+    if (!formRef.current.check()) return;
     const success = await login(formData.email, formData.senha);
-
-    if (success) {
-      navigate("/dashboard");
-    }
+    if (success) navigate("/dashboard");
   };
 
   return (
-    <Container className="login-container">
-      <div className="login-wrapper">
-        <Panel className="login-panel" bordered>
+    <div className="login-container">
+      <div className="login-panel">
+        <div className="login-header">
           <h2 className="login-title">AccessHub</h2>
-          <p className="login-subtitle">Sistema de Gestão de Acessos</p>
+          <p className="login-subtitle">Entre para gerenciar seus acessos</p>
+        </div>
 
-          {error && (
-            <Message showIcon type="error" className="login-error">
-              {error}
-            </Message>
-          )}
+        {error && <Message showIcon type="error" style={{ marginBottom: 20 }}>{error}</Message>}
 
-          <Form
-            ref={formRef}
-            model={validationModel}
-            onSubmit={handleSubmit}
-            formValue={formData}
-            onChange={(data) => setFormData(data)}
+        <Form
+          fluid
+          ref={formRef}
+          model={model}
+          formValue={formData}
+          onChange={setFormData}
+          onSubmit={handleSubmit}
+        >
+          <Form.Group controlId="email">
+            <Form.ControlLabel>Email Corporativo</Form.ControlLabel>
+            <Form.Control name="email" accepter={Input} className="custom-input" />
+          </Form.Group>
+
+          <Form.Group controlId="senha">
+            <Form.ControlLabel>Senha</Form.ControlLabel>
+            <Form.Control name="senha" type="password" accepter={Input} className="custom-input" />
+          </Form.Group>
+
+          <Button 
+            appearance="primary" 
+            block 
+            type="submit" 
+            loading={isLoading} 
+            className="login-btn"
           >
-            <FormGroup>
-              <label className="form-label">Email</label>
-              <FormControl
-                name="email"
-                type="email"
-                placeholder="seu@email.com"
-                disabled={isLoading}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <label className="form-label">Senha</label>
-              <FormControl
-                name="senha"
-                type="password"
-                placeholder="Digite sua senha"
-                disabled={isLoading}
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <Button
-                type="submit"
-                appearance="primary"
-                block
-                loading={isLoading}
-                disabled={isLoading}
-                className="login-button"
-              >
-                {isLoading ? "Autenticando..." : "Entrar"}
-              </Button>
-            </FormGroup>
-          </Form>
-
-          <p className="login-footer">
-            Não tem uma conta? <a href="#signup">Contate o administrador</a>
-          </p>
-        </Panel>
+            ENTRAR
+          </Button>
+        </Form>
       </div>
-    </Container>
+    </div>
   );
 }

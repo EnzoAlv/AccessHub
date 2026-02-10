@@ -1,103 +1,38 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
 }
 
-.dashboard-page {
-  padding: 32px 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.dashboard-page h2 {
-  color: #1a1a1a;
-  margin-bottom: 8px;
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.dashboard-page > p {
-  color: #666;
-  margin-bottom: 32px;
-  font-size: 15px;
-}
-
-.welcome-card {
+.stat-card {
   background: white;
   border-radius: 12px;
   padding: 24px;
-  margin-bottom: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
 }
 
-.welcome-card h3 {
-  color: #1a1a1a;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.user-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.info-item label {
-  color: #999;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-item span {
-  color: #1a1a1a;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.coming-soon {
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-  border: 2px solid #667eea30;
+.welcome-section {
+  background: white;
   border-radius: 12px;
-  padding: 32px 24px;
-  text-align: center;
+  padding: 32px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+  background-image: linear-gradient(to right, #ffffff, #f9fafb);
 }
 
-.coming-soon p {
-  color: #667eea;
-  font-weight: 500;
-  margin: 0;
-  font-size: 16px;
+.welcome-title {
+  font-size: 24px;
+  color: #111827;
+  margin-bottom: 8px;
 }
 
-@media (max-width: 768px) {
-  .dashboard-page {
-    padding: 24px 16px;
-  }
-
-  .dashboard-page h2 {
-    font-size: 24px;
-  }
-
-  .welcome-card {
-    padding: 16px;
-  }
-
-  .user-info {
-    grid-template-columns: 1fr;
-  }
-
-  .coming-soon {
-    padding: 24px 16px;
-  }
+.welcome-text {
+  color: #6b7280;
 }

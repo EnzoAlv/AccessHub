@@ -1,35 +1,48 @@
-export interface IMenu {
-  id: string;
-  nome: string;
-  icone: string;
-  rota: string;
-  ordem?: number;
-  ativo?: boolean;
-  submenus?: ISubMenu[];
-}
+/**
+ * @typedef {Object} IMenu
+ * @property {string} id
+ * @property {string} nome
+ * @property {string} icone
+ * @property {string} rota
+ * @property {number} [ordem]
+ * @property {boolean} [ativo]
+ * @property {ISubMenu[]} [submenus]
+ */
 
-export interface ISubMenu {
-  id: string;
-  menuId: string;
-  nome: string;
-  rota: string;
-  ordem?: number;
-  ativo?: boolean;
-}
+/**
+ * @typedef {Object} ISubMenu
+ * @property {string} id
+ * @property {string} menuId
+ * @property {string} nome
+ * @property {string} rota
+ * @property {number} [ordem]
+ * @property {boolean} [ativo]
+ 
 
-export interface IPermission {
-  id: string;
-  roleId: string;
-  menuId?: string;
-  submenuId?: string;
-}
+/**
+ * @typedef {Object} IPermission
+ * @property {string} id
+ * @property {string} roleId
+ * @property {string} [menuId]
+ * @property {string} [submenuId]
+ */
 
-export interface IMenuResponse {
-  menus: IMenu[];
-  permissions: IPermission[];
-}
+/**
+ * @typedef {Object} IMenuResponse
+ * @property {IMenu[]} menus
+ * @property {IPermission[]} permissions
+ */
 
-export interface IMenuTreeNode extends IMenu {
-  temPermissao: boolean;
-  submenus?: IMenuTreeNode[];
-}
+/**
+ * @typedef {Object} IMenuTreeNode
+ * @property {string} id
+ * @property {string} nome
+ * @property {string} icone
+ * @property {string} rota
+ * @property {number} [ordem]
+ * @property {boolean} [ativo]
+ * @property {boolean} temPermissao
+ * @property {IMenuTreeNode[]} [submenus]
+ */
+
+export {};
