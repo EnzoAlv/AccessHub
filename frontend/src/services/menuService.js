@@ -31,7 +31,7 @@ export const deleteMenu = async (menuId) => {
 };
 
 export const getSubMenusByMenu = async (menuId) => {
-  const response = await apiClient.get(`/menus/${menuId}/submenus`);
+  const response = await apiClient.get(`/submenus/menu/${menuId}`);
   return response;
 };
 
@@ -50,8 +50,8 @@ export const deleteSubMenu = async (submenuId) => {
   return response;
 };
 
-export const getPermissions = async (roleId) => {
-  const response = await apiClient.get(`/permissions/role/${roleId}`);
+export const getPermissions = async () => {
+  const response = await apiClient.get("/permissions");
   return response;
 };
 

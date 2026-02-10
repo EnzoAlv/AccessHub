@@ -1,18 +1,20 @@
-import { Container } from "rsuite";
+import { Container, Content } from "rsuite";
 import Sidebar from "../Sidebar/Sidebar";
 import DashboardHeader from "../DashboardHeader/DashboardHeader";
-import "./DashboardLayout.css";
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="dashboard-layout">
-      <DashboardHeader />
-      <div className="dashboard-main">
-        <Sidebar />
-        <div className="dashboard-content-wrapper">
-          <Container>{children}</Container>
-        </div>
-      </div>
+    <div className="show-container" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      
+      <Sidebar />
+
+      <Container style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+        <DashboardHeader />
+        
+        <Content style={{ padding: 20, overflowY: 'auto', backgroundColor: '#f5f7fa' }}>
+          {children}
+        </Content>
+      </Container>
     </div>
   );
 }
