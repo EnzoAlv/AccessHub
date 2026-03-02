@@ -1,6 +1,7 @@
 using AccessHub.API.Data;
 using AccessHub.API.Data.Seed;
 using AccessHub.API.Services.Menus;
+using AccessHub.API.Services.Permissions;
 using AccessHub.API.Services.Roles;
 using AccessHub.API.Services.SubMenus;
 using AccessHub.API.Services.Users;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ISubMenuService, SubMenuService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 #endregion
 
 var app = builder.Build();
