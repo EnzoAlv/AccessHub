@@ -1,71 +1,84 @@
 import { createContext, useState, useCallback, useEffect } from "react";
-import { login as loginService } from "../services/userService";
+import { useMenu } from "../hooks/useMenu";
+import userService from "../services/userService";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("accesshub_user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const { loadMenusByRole, clearMenus } = useMenu();
+
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (storedToken && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Erro ao restaurar usuário:", err);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      }
+    if (user?.roleId) {
+      loadMenusByRole(user.roleId);
     }
-
-    setIsLoading(false);
   }, []);
 
-  const handleLogin = useCallback(async (email, senha) => {
-    try {
+  const login = useCallback(
+    async (username, password) => {
+      setLoading(true);
       setError(null);
-      setIsLoading(true);
 
-      const response = await loginService(email, senha);
+      try {
+        const users = await userService.getAllUsers();
+        const foundUser = users.find(
+          (u) => u.username?.toLowerCase() === username.toLowerCase(),
+        );
 
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
+        if (!foundUser) {
+          throw new Error("Usuário não encontrado");
+        }
 
-      setUser(response.user);
+        const userData = {
+          id: foundUser.id,
+          username: foundUser.username,
+          name: foundUser.name,
+          email: foundUser.email,
+          roleId: foundUser.roleId,
+          roleName: foundUser.role?.name || "Unknown",
+        };
 
-      return true;
-    } catch (err) {
-      const errorMessage =
-        err.response?.data?.message ||
-        "Falha ao fazer login. Verifique suas credenciais.";
-      setError(errorMessage);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+        setUser(userData);
+        localStorage.setItem("accesshub_user", JSON.stringify(userData));
 
-  const handleLogout = useCallback(() => {
+        await loadMenusByRole(userData.roleId);
+
+        return userData;
+      } catch (err) {
+        const message = err.message || "Erro ao fazer login";
+        setError(message);
+        throw new Error(message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loadMenusByRole],
+  );
+
+
+  const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     setError(null);
-  }, []);
+    localStorage.removeItem("accesshub_user");
+    localStorage.removeItem("accesshub_token");
+    clearMenus();
+  }, [clearMenus]);
 
   const isAuthenticated = !!user;
 
   const value = {
     user,
-    isAuthenticated,
-    isLoading,
+    loading,
     error,
-    login: handleLogin,
-    logout: handleLogout,
-    setError,
+    isAuthenticated,
+    login,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
