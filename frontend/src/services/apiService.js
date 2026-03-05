@@ -1,37 +1,81 @@
-import axios from "axios";
+const API_BASE_URL = "http://localhost:5282/api";
 
-const apiClient = axios.create({
-  baseURL: "http://localhost:5282/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const apiService = {
+  async get(endpoint) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(
+        error || `GET ${endpoint} failed with status ${response.status}`,
+      );
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
 
-apiClient.interceptors.response.use(
-  (response) => {
-    return response.data;
+    return response.json();
   },
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+
+  async post(endpoint, data) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(
+        error || `POST ${endpoint} failed with status ${response.status}`,
+      );
     }
-    return Promise.reject(error);
-  },
-);
 
-export default apiClient;
+    return response.json();
+  },
+
+  async put(endpoint, data) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(
+        error || `PUT ${endpoint} failed with status ${response.status}`,
+      );
+    }
+
+    if (response.status === 204) return null;
+    return response.json();
+  },
+
+  async delete(endpoint) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(
+        error || `DELETE ${endpoint} failed with status ${response.status}`,
+      );
+    }
+
+    if (response.status === 204) return null;
+    return response.json();
+  },
+};
+
+export default apiService;
