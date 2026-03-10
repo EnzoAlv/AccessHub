@@ -2,7 +2,6 @@ import apiService from './apiService';
 
 const permissionService = {
   /**
-   * Busca todas as permissions, com filtros opcionais
    * @param {Object} filters 
    */
   async getPermissions(filters = {}) {
@@ -19,7 +18,6 @@ const permissionService = {
   },
 
   /**
-   * Busca permissions de um role específico
    * @param {number} roleId
    */
   async getPermissionsByRole(roleId) {

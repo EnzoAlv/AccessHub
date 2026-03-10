@@ -1,91 +1,164 @@
 import { useState } from "react";
-import { Sidenav, Nav, Sidebar as RSidebar, Navbar } from "rsuite";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useMenu } from "../../hooks/useMenu";
-import DashboardIcon from '@rsuite/icons/Dashboard';
-import GroupIcon from '@rsuite/icons/legacy/Group';
-import GearIcon from '@rsuite/icons/Gear';
-import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
-import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
-import MenuIcon from '@rsuite/icons/Menu';
+import { useAuth } from "../../hooks/useAuth";
+import {
+  Users,
+  Shield,
+  Settings,
+  Folder,
+  LayoutDashboard,
+  ChevronDown,
+  ChevronRight,
+  LogOut,
+  Menu as MenuIcon,
+  X,
+} from "lucide-react";
+import "./Sidebar.css";
 
-const headerStyles = {
-  padding: 18,
-  fontSize: 16,
-  height: 56,
-  background: '#34c3ff',
-  color: '#fff',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  fontWeight: 'bold'
+const iconMap = {
+  Users,
+  Shield,
+  Settings,
+  Folder,
+  LayoutDashboard,
 };
 
-const getIcon = (menuName) => {
-  const name = menuName?.toLowerCase() || "";
-  if (name.includes("dashboard")) return <DashboardIcon />;
-  if (name.includes("usuário") || name.includes("user")) return <GroupIcon />;
-  if (name.includes("config") || name.includes("sistema")) return <GearIcon />;
-  return <MenuIcon />;
-};
+function getIcon(iconName) {
+  return iconMap[iconName] || Folder;
+}
 
-export default function Sidebar() {
-  const { filteredMenus } = useMenu();
-  const [expand, setExpand] = useState(true);
+export default function Sidebar({ collapsed, onToggle }) {
+  const { sidebarMenus, loading } = useMenu();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [expandedMenus, setExpandedMenus] = useState({});
+
+  const toggleMenu = (menuId) => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [menuId]: !prev[menuId],
+    }));
+  };
+
+  const handleNavigate = (path) => {
+    if (path) navigate(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <RSidebar
-      style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#1a1d24', color: '#fff' }}
-      width={expand ? 260 : 56}
-      collapsible
-    >
-      <Sidenav.Header>
-        <div style={headerStyles}>
-          {expand ? <span>ACCESSHUB</span> : <span style={{ marginLeft: 8 }}>AH</span>}
-        </div>
-      </Sidenav.Header>
+    <aside className={`sidebar ${collapsed ? "sidebar--collapsed" : ""}`}>
+      <div className="sidebar__header">
+        {!collapsed && <h2 className="sidebar__title">AccessHub</h2>}
+        <button
+          className="sidebar__toggle"
+          onClick={onToggle}
+          title={collapsed ? "Expandir" : "Recolher"}
+        >
+          {collapsed ? <MenuIcon size={20} /> : <X size={20} />}
+        </button>
+      </div>
 
-      <Sidenav
-        expanded={expand}
-        defaultOpenKeys={[]}
-        appearance="subtle"
-        style={{ flex: 1, overflowY: 'auto' }} 
-      >
-        <Sidenav.Body>
-          <Nav>
-            {filteredMenus.map((menu) => {
-              if (menu.submenus && menu.submenus.length > 0) {
-                return (
-                  <Nav.Menu
-                    key={menu.id}
-                    eventKey={menu.id}
-                    title={menu.nome}
-                    icon={getIcon(menu.nome)}
-                    placement="rightStart"
-                  >
-                    {menu.submenus.map((submenu) => (
-                      <Nav.Item key={submenu.id} eventKey={submenu.id} href={submenu.rota}>
-                        {submenu.nome}
-                      </Nav.Item>
+      <nav className="sidebar__nav">
+        <button
+          className={`sidebar__item ${isActive("/dashboard") ? "sidebar__item--active" : ""}`}
+          onClick={() => handleNavigate("/dashboard")}
+          title="Dashboard"
+        >
+          <LayoutDashboard size={20} />
+          {!collapsed && <span>Dashboard</span>}
+        </button>
+
+        {loading ? (
+          <div className="sidebar__loading">
+            {!collapsed && <span>Carregando...</span>}
+          </div>
+        ) : (
+          sidebarMenus.map((menu) => {
+            const Icon = getIcon(menu.icon);
+            const hasSubMenus = menu.subMenus && menu.subMenus.length > 0;
+            const isExpanded = expandedMenus[menu.id];
+
+            return (
+              <div key={menu.id} className="sidebar__menu-group">
+                <button
+                  className={`sidebar__item ${
+                    !hasSubMenus && isActive(menu.path)
+                      ? "sidebar__item--active"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    hasSubMenus
+                      ? toggleMenu(menu.id)
+                      : handleNavigate(menu.path)
+                  }
+                  title={menu.name}
+                >
+                  <Icon size={20} />
+                  {!collapsed && (
+                    <>
+                      <span className="sidebar__item-text">{menu.name}</span>
+                      {hasSubMenus && (
+                        <span className="sidebar__chevron">
+                          {isExpanded ? (
+                            <ChevronDown size={16} />
+                          ) : (
+                            <ChevronRight size={16} />
+                          )}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </button>
+
+                {hasSubMenus && isExpanded && !collapsed && (
+                  <div className="sidebar__submenu">
+                    {menu.subMenus.map((sub) => (
+                      <button
+                        key={sub.id}
+                        className={`sidebar__subitem ${
+                          isActive(sub.path) ? "sidebar__subitem--active" : ""
+                        }`}
+                        onClick={() => handleNavigate(sub.path)}
+                        title={sub.name}
+                      >
+                        <span>{sub.name}</span>
+                      </button>
                     ))}
-                  </Nav.Menu>
-                );
-              }
-              return (
-                <Nav.Item key={menu.id} eventKey={menu.id} href={menu.rota} icon={getIcon(menu.nome)}>
-                  {menu.nome}
-                </Nav.Item>
-              );
-            })}
-          </Nav>
-        </Sidenav.Body>
-      </Sidenav>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </nav>
 
-      <Navbar appearance="subtle" className="nav-toggle" style={{ borderTop: '1px solid #2c303b' }}>
-        <Nav pullRight>
-          <Nav.Item onClick={() => setExpand(!expand)} style={{ width: 56, textAlign: 'center' }}>
-            {expand ? <ArrowLeftLineIcon style={{color: '#fff'}} /> : <ArrowRightLineIcon style={{color: '#fff'}} />}
-          </Nav.Item>
-        </Nav>
-      </Navbar>
-    </RSidebar>
+      <div className="sidebar__footer">
+        {!collapsed && user && (
+          <div className="sidebar__user">
+            <span className="sidebar__user-name">
+              {user.name || user.username}
+            </span>
+            <span className="sidebar__user-role">{user.roleName}</span>
+          </div>
+        )}
+        <button
+          className="sidebar__item sidebar__logout"
+          onClick={handleLogout}
+          title="Sair"
+        >
+          <LogOut size={20} />
+          {!collapsed && <span>Sair</span>}
+        </button>
+      </div>
+    </aside>
   );
 }
